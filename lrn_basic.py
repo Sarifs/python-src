@@ -13,7 +13,7 @@ s = "42"
 num = int(s)
 print(num)
 
-#Creat function in pyton 
+#Create function in pyton 
 
 def my_function():
   print("Hello from a function") 
