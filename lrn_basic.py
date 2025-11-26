@@ -16,4 +16,8 @@ print(num)
 #Create function in pyton 
 
 def my_function():
-  print("Hello from a function") 
+  print("Hello from a function")
+
+# ternaire
+age = 42
+majorite = "Mineur" if age < 18 else "Majeur"
