@@ -29,7 +29,6 @@ MORSE_CODE_DICT = { 'A':'.-', 'B':'-...',
                     '0':'-----', ', ':'--..--', '.':'.-.-.-',
                     '?':'..--..', '/':'-..-.', '-':'-....-',
                     '(':'-.--.', ')':'-.--.-'}
-
 # Function to encrypt the string
 # according to the morse code chart
 def encrypt(message):
@@ -94,21 +93,6 @@ message = "--. . . -.- ... -....- ..-. --- .-. -....- --. . . -.- ... "
 result = decrypt(message)
 print (result)
 
-def patron(str):
-
-    upc = 0
-    loc = 0
-    num = 0
-    str = "expension"
-    for c in str :
-        if c == '-' or c == '.' or c == '/':
-            return 'morse'
-        if c.isupper():
-            upc += 1
-        if c.islower():
-            loc += 1
-
-
 
 HOST = "challenge01.root-me.org"  # The server's hostname or IP address
 PORT = 52017      # The port used by the server
@@ -124,6 +108,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         var = data.decode()
         index = var.find(":")
         todecode = var[index+3:-5:]
+
         print(todecode)
         try :
             print(bytes.fromhex(todecode).decode('utf-8'))
@@ -134,20 +119,25 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         try :
             print(base64.b64decode(todecode.encode()))
             print("b64")
+            break
         except :
             print("next")
         try :
             print(base64.b85decode(todecode[::].encode()))
             print("b85")
+            break
         except:
             print("next")
         try :
             print(base64.b32decode(todecode[::].encode()))
             print("b32")
+            break
         except:
             print("next")
+        todecode = todecode.replace("/"," ")
+        print(todecode)
+        print(decrypt(todecode))
         break
-
 
 
 # base64 ok
