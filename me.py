@@ -94,6 +94,19 @@ message = "--. . . -.- ... -....- ..-. --- .-. -....- --. . . -.- ... "
 result = decrypt(message)
 print (result)
 
+def patron(str):
+
+    upc = 0
+    loc = 0
+    num = 0
+    str = "expension"
+    for c in str :
+        if c == '-' or c == '.' or c == '/':
+            return 'morse'
+        if c.isupper():
+            upc += 1
+        if c.islower():
+            loc += 1
 
 
 
@@ -110,13 +123,35 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         print(data.decode())
         var = data.decode()
         index = var.find(":")
-        todecode = var[index+1::]
+        todecode = var[index+3:-5:]
         print(todecode)
-        print(base64.b64decode(todecode.encode()))
+        try :
+            print(bytes.fromhex(todecode).decode('utf-8'))
+            print("ASCII")
+            break
+        except:
+            print("next")
+        try :
+            print(base64.b64decode(todecode.encode()))
+            print("b64")
+        except :
+            print("next")
+        try :
+            print(base64.b85decode(todecode[::].encode()))
+            print("b85")
+        except:
+            print("next")
+        try :
+            print(base64.b32decode(todecode[::].encode()))
+            print("b32")
+        except:
+            print("next")
+        break
 
 
 
-# base64
+# base64 ok
 # morse
-# base32
+# base32 ok
 # ascii = utf 8
+# base64.b85decode base85 ok
