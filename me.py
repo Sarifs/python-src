@@ -109,37 +109,68 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         index = var.find(":")
         todecode = var[index+3:-5:]
 
-        print(todecode)
+        print("presentation :" + todecode + ".")
+        for c in todecode:
+            if c == '.':
+                todecode = todecode.replace("/"," ")
+                val = decrypt(todecode)
+                print (val)
+                print("to send")
+                s.send(f"{val.lower()}\n".encode())
+                print("morse")
+                i += 1
+                break
+                
         try :
-            print(bytes.fromhex(todecode).decode('utf-8'))
+            val = bytes.fromhex(todecode).decode('utf-8')
+            print("to send")
+            s.send(f"{val}\n".encode())
             print("ASCII")
             break
         except:
             print("next")
         try :
-            print(base64.b64decode(todecode.encode()))
+            val = base64.b64decode(todecode.encode())
+            print(val.decode())
+            print("to send")
+            s.send(f"{val.decode()}\n".encode())
             print("b64")
             break
+            for c in val :
+                if c.islower():
+                    print("to send")
+                    s.send(f"{val}\n".encode())
+                    print("b64")    
+                    i = i + 1
+            if i != 0 :
+                break
+                    
         except :
             print("next")
         try :
-            print(base64.b85decode(todecode[::].encode()))
-            print("b85")
+            val = base64.b32decode(todecode[::].encode())
+            print(val)
+            print("b32")
+            print("to send")
+            s.send(f"{val}\n".encode())
             break
+            
         except:
             print("next")
         try :
-            print(base64.b32decode(todecode[::].encode()))
-            print("b32")
+            val = base64.b85decode(todecode[::].encode())
+            print(val)
+            print("b85")
+            print("to send")
+            s.send(f"{val}\n".encode())
             break
         except:
-            print("next")
-        todecode = todecode.replace("/"," ")
-        print(todecode)
-        print(decrypt(todecode))
-        break
+            print("b85 next")
+    data = s.recv(1024)
+    print(data.decode())
 
-
+    vil = "NBXXG5DBM5UW4ZY="
+    print(base64.b32decode(vil))
 # base64 ok
 # morse
 # base32 ok
