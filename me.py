@@ -88,6 +88,19 @@ def decrypt(message):
 
     return decipher
 
+def to_send(todecode, s):
+    for c in todecode:
+            if c == '.':
+                todecode = todecode.replace("/"," ")
+                val = decrypt(todecode)
+                print (val)
+                print("to send")
+                s.send(f"{val.lower()}\n".encode())
+                print("morse")
+                return True
+    return False
+
+
 # Hard-coded driver function to run the program
 message = "--. . . -.- ... -....- ..-. --- .-. -....- --. . . -.- ... "
 result = decrypt(message)
@@ -102,7 +115,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     
     
     i = 0
-    while i < 1:
+    while i < 100:
         data = s.recv(1024)
         print(data.decode())
         var = data.decode()
@@ -110,23 +123,16 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         todecode = var[index+3:-5:]
 
         print("presentation :" + todecode + ".")
-        for c in todecode:
-            if c == '.':
-                todecode = todecode.replace("/"," ")
-                val = decrypt(todecode)
-                print (val)
-                print("to send")
-                s.send(f"{val.lower()}\n".encode())
-                print("morse")
-                i += 1
-                break
-                
+        if to_send(todecode,s):
+            i += 1
+            continue
         try :
             val = bytes.fromhex(todecode).decode('utf-8')
             print("to send")
             s.send(f"{val}\n".encode())
             print("ASCII")
-            break
+            i += 1
+            continue
         except:
             print("next")
         try :
@@ -135,7 +141,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             print("to send")
             s.send(f"{val.decode()}\n".encode())
             print("b64")
-            break
+            i += 1
+            continue
             for c in val :
                 if c.islower():
                     print("to send")
@@ -149,28 +156,28 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             print("next")
         try :
             val = base64.b32decode(todecode[::].encode())
-            print(val)
+            print(val.decode())
             print("b32")
             print("to send")
-            s.send(f"{val}\n".encode())
-            break
+            s.send(f"{val.decode()}\n".encode())
+            i += 1
+            continue
             
         except:
             print("next")
         try :
-            val = base64.b85decode(todecode[::].encode())
-            print(val)
+            val = base64.b85decode(todecode.encode())
+            print(val.decode())
             print("b85")
             print("to send")
-            s.send(f"{val}\n".encode())
-            break
+            s.send(f"{val.decode()}\n".encode())
+            i += 1
+            continue
         except:
             print("b85 next")
     data = s.recv(1024)
     print(data.decode())
-
-    vil = "NBXXG5DBM5UW4ZY="
-    print(base64.b32decode(vil))
+   
 # base64 ok
 # morse
 # base32 ok
