@@ -93,27 +93,21 @@ def to_send(todecode, s):
             if c == '.':
                 todecode = todecode.replace("/"," ")
                 val = decrypt(todecode)
-                print (val)
-                print("to send")
                 s.send(f"{val.lower()}\n".encode())
-                print("morse")
                 return True
     return False
 
 
-# Hard-coded driver function to run the program
 message = "--. . . -.- ... -....- ..-. --- .-. -....- --. . . -.- ... "
 result = decrypt(message)
 print (result)
 
 
-HOST = "challenge01.root-me.org"  # The server's hostname or IP address
-PORT = 52017      # The port used by the server
+HOST = "challenge01.root-me.org"
+PORT = 52017      
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((HOST, PORT))
-    
-    
     i = 0
     while i < 100:
         data = s.recv(1024)
@@ -122,59 +116,39 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         index = var.find(":")
         todecode = var[index+3:-5:]
 
-        print("presentation :" + todecode + ".")
+        print("my chaine :" + todecode)
         if to_send(todecode,s):
             i += 1
             continue
         try :
             val = bytes.fromhex(todecode).decode('utf-8')
-            print("to send")
             s.send(f"{val}\n".encode())
-            print("ASCII")
             i += 1
             continue
         except:
-            print("next")
+            pass
         try :
             val = base64.b64decode(todecode.encode())
-            print(val.decode())
-            print("to send")
             s.send(f"{val.decode()}\n".encode())
-            print("b64")
             i += 1
-            continue
-            for c in val :
-                if c.islower():
-                    print("to send")
-                    s.send(f"{val}\n".encode())
-                    print("b64")    
-                    i = i + 1
-            if i != 0 :
-                break
-                    
+            continue                  
         except :
-            print("next")
+            pass
         try :
             val = base64.b32decode(todecode[::].encode())
-            print(val.decode())
-            print("b32")
-            print("to send")
             s.send(f"{val.decode()}\n".encode())
             i += 1
             continue
             
         except:
-            print("next")
+            pass
         try :
             val = base64.b85decode(todecode.encode())
-            print(val.decode())
-            print("b85")
-            print("to send")
             s.send(f"{val.decode()}\n".encode())
             i += 1
             continue
         except:
-            print("b85 next")
+            pass
     data = s.recv(1024)
     print(data.decode())
    
